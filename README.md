@@ -4,7 +4,7 @@
 
 ## Business rules
 
-- [] It can be possible to create an user
+- [x] It can be possible to create an user
 - [] It can be possible to identify an user on request calls
 - [] It can be possible to registry a meal
 - [] It can be possible to edit an existed meal
@@ -15,14 +15,14 @@
 
 ## Functional Requirements
 
-- [] To create an user it needs to pass the following data:
-  - [] User's name
-  - [] Email
-  - [] Password
+- [x] To create an user it needs to pass the following data:
+  - [x] User's name
+  - [x] Email
+  - [x] Password
 - [] Password needs to be hashed
 - [] User can only delete, read or edit meals created by them
 - [] A meal to be registered needs to be with the follow infos:
-  - [] Name
+  - [] Tile
   - [] Description
   - [] Date and hour
   - [] It's a diet meal or not
@@ -34,5 +34,5 @@
 
 ## Non-functional Requirements
 
-- [] To hash user's password it has to use bycript lib
+- [] To hash user's password it has to use bcript lib
 - [] It'll be used PostgreSQL database
