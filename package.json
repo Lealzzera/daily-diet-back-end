@@ -1,0 +1,25 @@
+{
+	"name": "daily-diet-back-end",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"dev": "tsx watch src/server.ts",
+		"knex": "node --no-warnings --import tsx ./node_modules/knex/bin/cli.js"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"@types/node": "^20.14.2",
+		"tsx": "^4.15.6",
+		"typescript": "^5.4.5"
+	},
+	"dependencies": {
+		"dotenv": "^16.4.5",
+		"fastify": "^4.28.0",
+		"knex": "^3.1.0",
+		"pg": "^8.12.0",
+		"zod": "^3.23.8"
+	}
+}

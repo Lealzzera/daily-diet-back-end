@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  api-solid-pg:
+    image: bitnami/postgresql
+    ports:
+      - 5430:5432
+    environment:
+      - POSTGRESQL_USERNAME=daily
+      - POSTGRESQL_PASSWORD=diet
+      - POSTGRESQL_DATABASE=daily-diet
