@@ -2,6 +2,7 @@ import { FastifyInstance } from "fastify";
 import { randomUUID } from "crypto";
 import { z } from "zod";
 import { knexConfig } from "../../database";
+import { hashPassword } from "../../utils/hashPassword";
 
 export async function usersRoutes(app: FastifyInstance) {
 	app.get("/", async (req, res) => {
@@ -32,19 +33,19 @@ export async function usersRoutes(app: FastifyInstance) {
 	});
 
 	app.post("/", async (req, res) => {
-		const createUserSchema = z.object({
-			name: z.string(),
-			email: z.string().email(),
-			password: z.string().min(6),
-		});
-
 		try {
+			const createUserSchema = z.object({
+				name: z.string(),
+				email: z.string().email(),
+				password: z.string().min(6),
+			});
 			const { name, email, password } = createUserSchema.parse(req.body);
+			const hashedPassword = hashPassword(password);
 			await knexConfig("users").insert({
 				id: randomUUID(),
 				name,
 				email,
-				password,
+				password: hashedPassword,
 			});
 		} catch (err) {
 			res.status(400).send(err);
@@ -76,10 +77,13 @@ export async function usersRoutes(app: FastifyInstance) {
 				streak: z.number().optional(),
 			});
 			const { id } = userParamsSchema.parse(req.params);
-			const body = userBodySchema.parse(req.body);
+			const { email, password, streak } = userBodySchema.parse(req.body);
+
+			const hashedPassword = hashPassword(password);
+
 			await knexConfig("users")
 				.where("id", id)
-				.update({ ...body });
+				.update({ email, password: hashedPassword, streak });
 			return res.status(200).send();
 		} catch (err) {
 			return res.status(400).send({ error: err });
