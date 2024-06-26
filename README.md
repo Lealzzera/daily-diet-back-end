@@ -7,10 +7,10 @@
 - [x] It can be possible to create an user
 - [] It can be possible to identify an user on request calls
 - [x] It can be possible to registry a meal
-- [] It can be possible to edit an existed meal
-- [] It can be possible to delete a meal
+- [x] It can be possible to edit an existed meal
+- [x] It can be possible to delete a meal
 - [] It can be possible to list all user's meals
-- [] It can be possible to show up only one meal
+- [x] It can be possible to show up only one meal
 - [] It can be possible to get user metrics
 
 ## Functional Requirements
@@ -19,7 +19,7 @@
   - [x] User's name
   - [x] Email
   - [x] Password
-- [] Password needs to be hashed
+- [x] Password needs be hashed
 - [] User can only delete, read or edit meals created by them
 - [x] A meal to be registered needs to be with the follow infos:
   - [x] Title
@@ -34,5 +34,5 @@
 
 ## Non-functional Requirements
 
-- [] To hash user's password it has to use bcript lib
-- [] It'll be used PostgreSQL database
+- [x] To hash user's password it has to use bcript lib
+- [x] It'll be used PostgreSQL database
