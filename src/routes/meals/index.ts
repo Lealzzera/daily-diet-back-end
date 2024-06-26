@@ -28,12 +28,27 @@ export async function mealsRoutes(app: FastifyInstance) {
 			});
 			const { title, description, diet_meal } = mealBodySchema.parse(req.body);
 
-			await knexConfig("meals").insert({
-				user_id: req.userId,
-				title,
-				description,
-				diet_meal,
-			});
+			const [, streak] = await Promise.resolve([
+				await knexConfig("meals").insert({
+					user_id: req.userId,
+					title,
+					description,
+					diet_meal,
+				}),
+				await knexConfig("users").select("streak").where("id", req.userId),
+			]);
+
+			if (diet_meal) {
+				await knexConfig("users")
+					.where("id", req.userId)
+					.update({
+						streak: streak[0].streak + 1,
+					});
+			} else {
+				await knexConfig("users").where("id", req.userId).update({
+					streak: 0,
+				});
+			}
 
 			return res.status(201).send();
 		} catch (err) {
