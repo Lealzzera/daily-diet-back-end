@@ -9,7 +9,7 @@
 - [x] It can be possible to registry a meal
 - [x] It can be possible to edit an existed meal
 - [x] It can be possible to delete a meal
-- [] It can be possible to list all user's meals
+- [x] It can be possible to list all user's meals
 - [x] It can be possible to show up only one meal
 - [] It can be possible to get user metrics
 

@@ -1,8 +1,24 @@
-import { FastifyInstance } from "fastify";
+import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { z } from "zod";
 import { knexConfig } from "../../database";
 
+declare module "fastify" {
+	interface FastifyRequest {
+		userId?: string;
+	}
+}
+
 export async function mealsRoutes(app: FastifyInstance) {
+	app.addHook("preHandler", async (req: FastifyRequest, res: FastifyReply) => {
+		const { user_id } = req.headers;
+
+		if (!user_id) {
+			res.status(400).send("Not Athorized");
+		}
+		if (!Array.isArray(user_id)) {
+			req.userId = user_id;
+		}
+	});
 	app.post("/", async (req, res) => {
 		try {
 			const mealBodySchema = z.object({
@@ -13,6 +29,7 @@ export async function mealsRoutes(app: FastifyInstance) {
 			const { title, description, diet_meal } = mealBodySchema.parse(req.body);
 
 			await knexConfig("meals").insert({
+				user_id: req.userId,
 				title,
 				description,
 				diet_meal,
@@ -26,8 +43,9 @@ export async function mealsRoutes(app: FastifyInstance) {
 
 	app.get("/", async (req, res) => {
 		try {
-			const meals = await knexConfig("meals").select("*");
-
+			const meals = await knexConfig("meals")
+				.select("*")
+				.where("user_id", req.userId);
 			return res.status(200).send({ meals });
 		} catch (err) {
 			return res.status(400).send({ error: err });
