@@ -8,6 +8,14 @@ declare module "fastify" {
 	}
 }
 
+type UserMealsMetrics = {
+	quantityMeals: number;
+	quantityDietMeals: number;
+	quantityNoDietMeals: number;
+	bestStreak: number;
+	streak: number;
+};
+
 export async function mealsRoutes(app: FastifyInstance) {
 	app.addHook("preHandler", async (req: FastifyRequest, res: FastifyReply) => {
 		const { user_id } = req.headers;
@@ -70,6 +78,29 @@ export async function mealsRoutes(app: FastifyInstance) {
 				.select("*")
 				.where("user_id", req.userId);
 			return res.status(200).send({ meals });
+		} catch (err) {
+			return res.status(400).send({ error: err });
+		}
+	});
+	app.get("/metrics", async (req, res) => {
+		try {
+			const userMealsMetrics = {} as UserMealsMetrics;
+			const [userMealsData, streakData] = await Promise.resolve([
+				await knexConfig("meals").select("*").where("user_id", req.userId),
+				await knexConfig("users")
+					.select("best_streak", "streak")
+					.where("id", req.userId),
+			]);
+			userMealsMetrics.quantityMeals = userMealsData.length;
+			userMealsMetrics.quantityDietMeals = userMealsData.filter(
+				({ diet_meal }) => diet_meal === true
+			).length;
+			userMealsMetrics.quantityNoDietMeals =
+				userMealsMetrics.quantityMeals - userMealsMetrics.quantityDietMeals;
+			userMealsMetrics.bestStreak = streakData[0].best_streak;
+			userMealsMetrics.streak = streakData[0].streak;
+
+			return res.status(200).send({ userMetrics: userMealsMetrics });
 		} catch (err) {
 			return res.status(400).send({ error: err });
 		}
